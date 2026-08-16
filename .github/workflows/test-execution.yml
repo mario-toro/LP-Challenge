@@ -1,0 +1,80 @@
+name: MT API Tests
+env:
+  API_BASE_URL: http://localhost:3000
+  ENVIRONMENT: dev
+on:
+  push:
+    branches:
+      - MT_UsersTests
+  pull_request:
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Start application
+        run: |
+          docker run -d \
+            --name sdet-challenge \
+            -p 3000:3000 \
+            ghcr.io/danielsilva-loanpro/sdet-interview-challenge:latest
+
+      - name: Wait for API
+        run: |
+          echo "Waiting for API..."
+
+          for i in {1..30}; do
+            if curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/ | grep -q "200\|404"; then
+              echo "API is ready!"
+              exit 0
+            fi
+
+            echo "Attempt $i - API not ready yet..."
+            sleep 2
+          done
+
+          echo "API failed to start"
+          docker logs sdet-challenge
+          exit 1
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Run API tests
+        run: |
+          dotnet test \
+            --no-build \
+            --configuration Release \
+            --logger "trx;LogFileName=test-results.trx" \
+            --results-directory ./TestResults
+
+      - name: Publish test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults/
+
+      - name: Docker logs
+        if: failure()
+        run: docker logs sdet-challenge
+
+      - name: Stop application
+        if: always()
+        run: docker stop sdet-challenge
