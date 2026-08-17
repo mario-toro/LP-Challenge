@@ -11,6 +11,9 @@ on:
 jobs:
   api-tests:
     runs-on: ubuntu-latest
+    container:
+        image: ghcr.io/danielsilva-loanpro/sdet-interview-challenge:latest
+        options: -p 3000:3000
 
     permissions:
       contents: read
@@ -25,12 +28,12 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Start application
-        run: |
-          docker run -d \
-            --name sdet-challenge \
-            -p 3000:3000 \
-            ghcr.io/danielsilva-loanpro/sdet-interview-challenge:latest
+      #- name: Start application
+        #run: |
+          #docker run -d \
+            #--name sdet-challenge \
+            #-p 3000:3000 \
+            #ghcr.io/danielsilva-loanpro/sdet-interview-challenge:latest
 
       - name: Wait for API
         run: |
