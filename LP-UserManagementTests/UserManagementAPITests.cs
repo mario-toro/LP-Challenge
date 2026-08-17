@@ -31,7 +31,8 @@ namespace LP_UserManagementTests
             var baseURL = Environment.GetEnvironmentVariable("API_BASE_URL");
             if(baseURL == null)
             {
-                Console.WriteLine("Base url not specified, using htpp://localhost:3000 as default");
+                Console.WriteLine("Base url not specified, using http://localhost:3000 as default");
+                baseURL = "http://localhost:3000";
             }
             else
             {
@@ -39,7 +40,8 @@ namespace LP_UserManagementTests
             }
 
 
-            _baseAddress = $"{baseURL}/{environment}";
+            _baseAddress = $"{baseURL}/{environment}/";
+            Console.WriteLine($"API base address to be used: {_baseAddress}");
             _token = "mysecrettoken";
         }
         #region Post /users
