@@ -86,6 +86,7 @@ jobs:
           dotnet test \
             --no-build \
             --configuration Release \
+            --NUnit.IncludeStackTrace=false \
             --logger "trx;LogFileName=API-Test-Results-${ENVIRONMENT}.trx" \
             --results-directory ./TestResults
 
