@@ -11,20 +11,12 @@ on:
 jobs:
   api-tests:
     runs-on: ubuntu-latest
-    container:
-        image: ghcr.io/danielsilva-loanpro/sdet-interview-challenge:latest
-        options: -p 3000:3000
 
     permissions:
       contents: read
       packages: read
 
     steps:
-      - name: Install curl and wget
-        run: |
-            sudo apt-get update
-            sudo apt-get install -y curl wget
-
       - name: Checkout repository
         uses: actions/checkout@v7
 
@@ -33,12 +25,19 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      #- name: Start application
-        #run: |
-          #docker run -d \
-            #--name sdet-challenge \
-            #-p 3000:3000 \
-            #ghcr.io/danielsilva-loanpro/sdet-interview-challenge:latest
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Start application
+        run: |
+          docker run -d \
+            --name sdet-challenge \
+            -p 3000:3000 \
+            ghcr.io/danielsilva-loanpro/sdet-interview-challenge:latest
 
       - name: Wait for API
         run: |
