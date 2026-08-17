@@ -87,7 +87,7 @@ jobs:
         if: always()
         with:
           name: API-Test-Results
-          path:  ./TestResults/*.trx
+          path:  '**/TestResults/*.trx'
           reporter: dotnet-trx
 
       - name: Docker logs
