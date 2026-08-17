@@ -38,13 +38,21 @@ jobs:
             --name sdet-challenge \
             -p 3000:3000 \
             ghcr.io/danielsilva-loanpro/sdet-interview-challenge:latest
+      
+      - name: Check container
+        run: |
+            echo "Container status:"
+            docker ps -a
+
+            echo "Container logs:"
+            docker logs sdet-challenge
 
       - name: Wait for API
         run: |
           echo "Waiting for API..."
 
           for i in {1..30}; do
-            if curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/ | grep -q "200\|404"; then
+            if curl -s -o /dev/null -w "%{http_code}" $API_BASE_URL$ENVIRONMENT/users | grep -q "200\|404"; then
               echo "API is ready!"
               exit 0
             fi
