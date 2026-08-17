@@ -14,15 +14,34 @@ namespace LP_UserManagementTests
         [SetUp]
         public void Setup()
         {
-            //Set URL
-            var environment = Environment.GetEnvironmentVariable("ENVIRONMENT") ?? "dev";
+            Console.WriteLine("Starting API Testing setup");
+            Console.WriteLine("Checking if environment has been specified:");
+            var environment = Environment.GetEnvironmentVariable("ENVIRONMENT");
+            if (environment == null)
+            {
+                Console.WriteLine("Environment not specified, using dev as default");
+                environment = "dev";
+            }
+            else
+            {
+                Console.WriteLine($"Environment value found, using {environment} as environment for testing");
+            }
 
-            var addressEnv = $"http://localhost:3000/{environment}/";
-            _baseAddress = Environment.GetEnvironmentVariable("API_BASE_URL") ?? addressEnv;
+            Console.WriteLine("Checking if base url has been specified:");
+            var baseURL = Environment.GetEnvironmentVariable("API_BASE_URL");
+            if(baseURL == null)
+            {
+                Console.WriteLine("Base url not specified, using htpp://localhost:3000 as default");
+            }
+            else
+            {
+                Console.WriteLine($"Base url found, using {baseURL} as base url for testing");
+            }
 
+
+            _baseAddress = $"{baseURL}/{environment}";
             _token = "mysecrettoken";
         }
-
         #region Post /users
 
         [Test]
