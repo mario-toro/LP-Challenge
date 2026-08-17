@@ -67,9 +67,11 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore
+        working-directory: ./LP-UserManagementTests/LP-UserManagementTests.slnx
 
       - name: Build
         run: dotnet build --no-restore --configuration Release
+        working-directory: ./LP-UserManagementTests/LP-UserManagementTests.slnx
 
       - name: Run API tests
         run: |
