@@ -74,7 +74,8 @@ jobs:
         working-directory: ./LP-UserManagementTests
 
       - name: Run API tests
-        run: |
+        working
+        working-directory: ./LP-UserManagementTests
           dotnet test \
             --no-build \
             --configuration Release \
