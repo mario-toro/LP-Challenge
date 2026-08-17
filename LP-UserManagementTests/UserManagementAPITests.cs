@@ -11,7 +11,7 @@ namespace LP_UserManagementTests
         private string _baseAddress;
         private string _token;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void Setup()
         {
             Console.WriteLine("Starting API Testing setup");
