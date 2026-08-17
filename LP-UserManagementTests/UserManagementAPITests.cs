@@ -8,16 +8,18 @@ namespace LP_UserManagementTests
 {
     public class UserManagementApiTests
     {
-        private string _endpoint;
-        private string _environment;
+        private string _baseAddress;
         private string _token;
 
         [SetUp]
         public void Setup()
         {
             //Set URL
-            _environment = "prod";
-            _endpoint = $"http://localhost:3000/{_environment}/";
+            var environment = Environment.GetEnvironmentVariable("ENVIRONMENT") ?? "dev";
+
+            var addressEnv = $"http://localhost:3000/{environment}/";
+            _baseAddress = Environment.GetEnvironmentVariable("API_BASE_URL") ?? addressEnv;
+
             _token = "mysecrettoken";
         }
 
@@ -72,7 +74,7 @@ namespace LP_UserManagementTests
         [Test]
         public async Task Given_UsersAreRequested_Then_ListUsers()
         {
-            using var client = new HttpClient{BaseAddress = new Uri(_endpoint)};
+            using var client = new HttpClient{BaseAddress = new Uri(_baseAddress)};
 
             var users = await client.GetFromJsonAsync<List<User>>("users");
 
@@ -296,7 +298,7 @@ namespace LP_UserManagementTests
         {
             try
             {
-                using var client = new HttpClient { BaseAddress = new Uri(_endpoint) };
+                using var client = new HttpClient { BaseAddress = new Uri(_baseAddress) };
                 var existingUser = await client.GetFromJsonAsync<User>($"users/{email}");
 
                 if (existingUser == null)
@@ -315,7 +317,7 @@ namespace LP_UserManagementTests
 
         private async Task<User?> CreateUserAsync(User user)
         {
-            using var client = new HttpClient { BaseAddress = new Uri(_endpoint) };
+            using var client = new HttpClient { BaseAddress = new Uri(_baseAddress) };
 
             var response = await client.PostAsJsonAsync("users", user);
 
@@ -336,7 +338,7 @@ namespace LP_UserManagementTests
 
         private async Task<User?> UpdateUserAsync(User user, string existingEmailAccount = "")
         {
-            using var client = new HttpClient { BaseAddress = new Uri(_endpoint) };
+            using var client = new HttpClient { BaseAddress = new Uri(_baseAddress) };
 
             var email = string.IsNullOrEmpty(existingEmailAccount) ? user.Email : existingEmailAccount;
             var response = await client.PutAsJsonAsync($"users/{email}", user);
@@ -360,7 +362,7 @@ namespace LP_UserManagementTests
 
         private async Task<bool> DeleteUserAsync(string email, string token)
         {
-            using var client = new HttpClient { BaseAddress = new Uri(_endpoint) };
+            using var client = new HttpClient { BaseAddress = new Uri(_baseAddress) };
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(token);
 
             var response = await client.DeleteAsync($"users/{email}");
