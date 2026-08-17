@@ -56,7 +56,7 @@ jobs:
 
       - name: Wait for API
         run: |
-          echo "Waiting for API $ENVIRONMENT ..."
+          echo "Waiting for API on ${ENVIRONMENT} ..."
 
           for i in {1..30}; do
             if curl -s -o /dev/null -w "%{http_code}" $API_BASE_URL + '/' + $ENVIRONMENT + '/users' | grep -q "200\|404"; then
