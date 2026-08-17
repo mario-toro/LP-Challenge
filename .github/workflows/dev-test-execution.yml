@@ -20,6 +20,11 @@ jobs:
       packages: read
 
     steps:
+      - name: Install curl and wget
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y curl wget
+
       - name: Checkout repository
         uses: actions/checkout@v7
 
