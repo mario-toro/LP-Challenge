@@ -79,15 +79,23 @@ jobs:
           dotnet test \
             --no-build \
             --configuration Release \
-            --logger "trx;LogFileName=test-results.trx" \
+            --logger "trx;LogFileName=API-Test-Results.trx" \
             --results-directory ./TestResults
 
       - name: Publish test results
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: test-results
+          name: API-Test-Results
           path:  /home/runner/work/LP-Challenge/LP-Challenge/LP-UserManagementTests/TestResults/
+
+      - name: Publish and display test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: API-Test-Results
+          path:  /home/runner/work/LP-Challenge/LP-Challenge/LP-UserManagementTests/TestResults/*.trx
+          reporter: dotnet-trx
 
       - name: Docker logs
         if: failure()
