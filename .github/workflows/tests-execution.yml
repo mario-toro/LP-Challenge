@@ -97,6 +97,13 @@ jobs:
           path:  '**/TestResults/API-Test-Results-*.trx'
           reporter: dotnet-trx
 
+      - name: Upload test restuls
+        if: always()
+        uses: actions/upload-artifacts@v4
+        with:
+          name: API-Test-Results-${ENVIRONMENT}.trx
+          path: '**/TestResults/API-Test-Results-*.trx'
+
       - name: Docker logs
         if: failure()
         run: docker logs sdet-challenge
