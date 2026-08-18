@@ -101,7 +101,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: "API-Test-Results-${ENVIRONMENT}.trx"
+          name: "API-Test-Results-${{ENVIRONMENT}}.trx"
           path: '**/TestResults/API-Test-Results-*.trx'
 
       - name: Docker logs
