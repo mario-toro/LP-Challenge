@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Json;
 using LP_UserManagementTests.Data;
-using static System.Net.WebRequestMethods;
 
 namespace LP_UserManagementTests
 {
